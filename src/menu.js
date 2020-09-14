@@ -17,13 +17,13 @@ export default class Menu {
 
         this.menu = document.getElementById('we-context');
 
-        we.addRowListener('contextmenu', rowEvent => this.contextMenuListener(rowEvent));
+        we.addRowListener('contextmenu', rowEvent => this.openMenu(rowEvent));
 
         document.addEventListener('click', () => this.outer.style.display = 'none');
 
     }
 
-    contextMenuListener(rowEvent) {
+    openMenu(rowEvent) {
                         
         let file = {};
 
@@ -61,25 +61,26 @@ export default class Menu {
         a.innerHTML = item.text;
 
         if (item.app) {
-            a.addEventListener('click', () => {
-
-                if(item.before) {
-                    this.we.apps.call(item.before, file, rowEvent);
-                }
-
-                if(item.multiple) {
-                    this.we.selection.each(selectedFile => 
-                        this.we.apps.call(item.app, selectedFile, rowEvent)
-                    );  
-                    return;
-                }
-
-                this.we.apps.call(item.app, file, rowEvent);
-            });
+            a.addEventListener('click', () => this.itemClick(item, file, rowEvent));
         }
 
         if (!item.condition || item.condition(we, file)) {
             this.menu.appendChild(a);
         }
+    }
+
+    itemClick(item, file, rowEvent) {
+        if(item.before) {
+            this.we.apps.call(item.before, file, rowEvent);
+        }
+
+        if(item.multiple) {
+            this.we.selection.each(selectedFile => 
+                this.we.apps.call(item.app, selectedFile, rowEvent)
+            );  
+            return;
+        }
+
+        this.we.apps.call(item.app, file, rowEvent);
     }
 }

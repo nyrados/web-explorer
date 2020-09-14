@@ -11,7 +11,7 @@ export default class Selection {
     clear() {
         this.items = {};
 
-        Array.prototype.slice.call(this.we.e.children).forEach(function(child) {
+        Array.prototype.slice.call(this.we.e.children).forEach(child => {
             child.classList.remove('we-selected');
         });
     } 
@@ -45,11 +45,9 @@ export default class Selection {
     }
 
     clickListener(rowEvent) {
-
         const event = rowEvent.event;
         const current = rowEvent.target.dataset.index;
         let index = [];
-        
         
         if (event.ctrlKey || event.shiftKey) {
             index = index.concat(Object.keys(this.items));
