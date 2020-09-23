@@ -2,7 +2,6 @@ export default class FileClipboard {
 
     clipboard = [];
     isCut = false;
-    items = [];
 
     constructor(we) {
         this.we = we;
@@ -12,26 +11,26 @@ export default class FileClipboard {
         this.clipboard = [];
     }
 
-    copy(index) {
+    copy(file) {
+
         if (this.isCut) {
             this.clear();
             this.isCut = false;
         }
 
-        this.add(index);
+        this.add(file);
     }
 
-    add(index) {
-        this.items.push(this.we.data[index])
-        this.clipboard.push(index);
+    add(file) {
+        this.clipboard.push(file);
     }
 
-    cut(index) {
+    cut(file) {
         if(!this.isCut) {
             this.clear();
             this.isCut = true;
         }
 
-        this.add(index);
+        this.add(file);
     }
 }

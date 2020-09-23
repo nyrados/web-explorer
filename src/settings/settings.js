@@ -1,33 +1,33 @@
 export const settings = {
     rows: ['icon', 'name', 'mime', 'path', 'size'],
     renderRow: {
-        icon: file => {
-            const icon = (() => {
+        icon: (file, we) => 
+            '<td><i class="fas fa-'+ 
+                (() => {
+                    if(file.type === 'dir') {
+                        return we.settings.icons['directory'];
+                    }
 
-                if(file.type === 'dir') {
-                    return we.settings.icons['directory'];
-                }
+                    if (we.settings.icons[file.mime]) {
+                        return we.settings.icon[file.mime];
+                    }
 
-                if (we.settings.icons[file.mime]) {
-                    return we.settings.icon[file.mime];
-                }
+                    const group = file.mime.split('/')[0];
 
-                const group = file.mime.split('/')[0];
+                    if (we.settings.icons[group]) {
+                        return we.settings.icons[group];
+                    }
 
-                if (we.settings.icons[group]) {
-                    return we.settings.icons[group];
-                }
+                    if(we.settings.icons[file.extension]) {
+                        return we.settings.icons[file.extension];
+                    }
 
-                if(we.settings.icons[file.extension]) {
-                    return we.settings.icons[file.extension];
-                }
+                    return we.settings.icons['default'];
+                })() + 
+            '"></i></td>'
+        ,
 
-                return we.settings.icons['default'];
-            })();
-
-            return '<td><i class="fas fa-' + icon + '"></i></td>'; 
-        },
-        size: function(file) {
+        size: file => {
 
             if (!file.size) {
                 return '<td></td>';
@@ -76,36 +76,6 @@ export const settings = {
                 condition: (we, file) => file.type === 'file'
             },
     
-            'copy': {
-                app: 'we-copy',
-                text: 'Copy',
-                before: 'we-clipboard-clear',
-                multiple: true,
-                condition: (we, file) => !!file.name
-            },
-    
-            'delete': {
-                text: 'Delete',
-                app: 'we-delete',
-                multiple: true,
-                condition: (we, file) => !!file.name
-            },
-    
-            'cut': {
-                text: 'Cut',
-                app: 'we-cut',
-                before: 'we-clipboard-clear',
-                multiple: true,
-                condition: (we, file) => !!file.name
-            },
-    
-            'paste': {
-                text: 'Paste',
-                app: 'we-paste',
-                condition: function(we) {
-                    return true || Object.keys(we.clipboard.items).length !== 0;
-                }
-            },
     
             'create-dir': {
                 text: 'Create Directory',

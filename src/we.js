@@ -5,6 +5,7 @@ import Selection from './selection';
 import RowEvent from './event/row';
 import Apps from './apps';
 import FileClipboard from './clipboard';
+import { settings } from './settings/settings';
 
 export default class WebExplorer {
 
@@ -21,8 +22,8 @@ export default class WebExplorer {
         this.modal = new Modal();
         this.client = new Client(server);
         this.apps = new Apps(this);
-        this.clipboard = new FileClipboard(this);
         this.selection = new Selection(this);
+        this.settings = settings;
 
         // DOM
         this.e = document.getElementById(id);
@@ -46,7 +47,7 @@ export default class WebExplorer {
     }
 
     getParent() {
-        let split = we.path.split('/');
+        let split = this.path.split('/');
         split.pop();
 
         return split.join('/');
@@ -75,6 +76,11 @@ export default class WebExplorer {
             .then(response => {
 
                 this.path = path;
+
+                response.data.forEach((value, index) => {
+                    response.data[index]['index'] = index;
+                });
+
                 we.data = response.data;
 
                 document.querySelectorAll("[data-content='we-current']").forEach(function(e) {
@@ -82,7 +88,6 @@ export default class WebExplorer {
                 });
 
                 let html = '';
-                let before = 0;
 
                 if (path !== '/') {
                     // Render Back Row at first tr
@@ -90,7 +95,7 @@ export default class WebExplorer {
                         let before = 0;
                         let tr = '<tr data-app="back" class="we-row">';
                         
-                        this.settings.rows.every(function(value) {
+                        this.settings.rows.every(value => {
                             if(value === 'name') {
                                 return false;
                             }
@@ -102,13 +107,13 @@ export default class WebExplorer {
 
                         let after = this.settings.rows.length - before - 1;
                         if(before > 0) {
-                            html += '<td colspan="' + before + '"></td>'
+                            tr += '<td colspan="' + before + '"></td>'
                         }
 
                         tr += '<td>..</td>';
 
                         if(after > 0) {
-                            html += '<td colspan="' + after + '"></td>'
+                           tr += '<td colspan="' + after + '"></td>'
                         }
 
                         return tr + '</tr>';
@@ -131,15 +136,12 @@ export default class WebExplorer {
     }
 
     renderRow(file, index) {
-
         let row = '<tr class="we-row" draggable="true" data-app="we-open" data-index="' + index + '">';
 
-        this.settings.rows.forEach(rowName => {
-
+        this.settings.rows.forEach(rowName => 
             row += (() => {
-
                 if (this.settings.renderRow[rowName] instanceof Function) {
-                    return this.settings.renderRow[rowName](file, rowName, this);
+                    return this.settings.renderRow[rowName](file, this);
                 }
 
                 if (typeof file[rowName] === 'undefined') {
@@ -147,9 +149,8 @@ export default class WebExplorer {
                 }
 
                 return '<td>' + file[rowName] + '</td>';
-            })();
-
-        });
+            })()
+        );
 
         return row + '</tr>';      
     }

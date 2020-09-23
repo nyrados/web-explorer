@@ -54,7 +54,7 @@ export default class Menu {
         }
 
         if(!this.items[name]) {
-            throw new Error('Invalid Context Entry: ' + entry);
+            throw new Error('Invalid Context Entry: ' + name);
         }
 
         const item = this.items[name];
