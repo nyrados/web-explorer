@@ -30,10 +30,7 @@
         
         <script src="../dist/web-explorer.js?<?php echo time(); ?>"></script>
         <script>
-        
-            const we = new WebExplorer('we', 'http://localhost/we/web-explorer-server/client/client.php');
-            we.open();
-            
+            webExplorer('we', 'http://localhost/we/web-explorer-server/client/client.php');
         </script>
 
 

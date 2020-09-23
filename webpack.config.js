@@ -1,7 +1,7 @@
 module.exports = {
     mode: 'development',
     entry: {
-      'web-explorer': './src/we.js',
+      'web-explorer': './src/index.js',
       'style': './scss/we.scss'
     },
     module: {

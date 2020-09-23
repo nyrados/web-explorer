@@ -5,12 +5,7 @@ import { settings } from './settings/settings';
 import Selection from './selection';
 import RowEvent from './event/row';
 import Apps from './settings/apps';
-import Viewer from './settings/app/viewer';
-import Menu from './menu';
-import Create from './settings/app/create';
-import Edit from './settings/app/edit';
 import FileClipboard from './clipboard';
-import DragFile from './dragfile';
 
 export default class WebExplorer {
 
@@ -27,16 +22,9 @@ export default class WebExplorer {
         this.clipboard = new FileClipboard(this);
         this.selection = new Selection(this);
 
-        new Menu(this);
-
         this.e = document.getElementById(id);
         this.e.classList.add('we');
         this.server = server;
-
-        Viewer(this);
-        Create(this);
-        Edit(this);
-        DragFile(this);
 
         this.apps.set('back', () => this.openDir(this.getParent()));
         this.addRowListener('dblclick', rowEvent => {
@@ -49,10 +37,6 @@ export default class WebExplorer {
             }
         });
     };
-
-    open() {
-        this.openDir('/');
-    }
 
     refresh() {
         this.openDir(this.path);
@@ -94,29 +78,34 @@ export default class WebExplorer {
                 let before = 0;
 
                 if (path !== '/') {
-                    html += '<tr data-app="back" class="we-row">';
-                    this.settings.rows.every(function(value) {
-                        if(value === 'name') {
-                            return false;
+                    // Render Back Row at first tr
+                    html += (() => {
+                        let before = 0;
+                        let tr = '<tr data-app="back" class="we-row">';
+                        
+                        this.settings.rows.every(function(value) {
+                            if(value === 'name') {
+                                return false;
+                            }
+
+                            before++;
+
+                            return true;
+                        });
+
+                        let after = this.settings.rows.length - before - 1;
+                        if(before > 0) {
+                            html += '<td colspan="' + before + '"></td>'
                         }
 
-                        before++;
+                        tr += '<td>..</td>';
 
-                        return true;
-                    });
+                        if(after > 0) {
+                            html += '<td colspan="' + after + '"></td>'
+                        }
 
-                    let after = this.settings.rows.length - before - 1;
-                    if(before > 0) {
-                        html += '<td colspan="' + before + '"></td>'
-                    }
-
-                    html += '<td>..</td>';
-
-                    if(after > 0) {
-                        html += '<td colspan="' + after + '"></td>'
-                    }
-
-                    html += '</tr>';
+                        return tr + '</tr>';
+                    })();
                 }
 
                 response.data.forEach((file, index) => html += this.renderRow(file, index));
@@ -138,12 +127,12 @@ export default class WebExplorer {
 
         let row = '<tr class="we-row" draggable="true" data-app="we-open" data-index="' + index + '">';
 
-        this.settings.rows.forEach(function(rowName) {
+        this.settings.rows.forEach(rowName => {
 
-            row += function() {
+            row += (() => {
 
-                if (we.settings.renderRow[rowName] instanceof Function) {
-                    return we.settings.renderRow[rowName](file, rowName, this);
+                if (this.settings.renderRow[rowName] instanceof Function) {
+                    return this.settings.renderRow[rowName](file, rowName, this);
                 }
 
                 if (typeof file[rowName] === 'undefined') {
@@ -151,7 +140,7 @@ export default class WebExplorer {
                 }
 
                 return '<td>' + file[rowName] + '</td>';
-            }();
+            })();
 
         });
 
