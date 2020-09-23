@@ -1,3 +1,19 @@
+const template =
+    '<div class="we-modal-content modal-dialog modal-lg">' +
+        '<div class="modal-content">' +
+            '<div class="modal-header">' +
+                '<h5 class="modal-title" id="we-modal-title"></h5>' +
+                '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                '<span aria-hidden="true">&times;</span>' +
+                '</button>' +
+            '</div>' +
+            '<div class="modal-body" id="we-modal-content"></div>' +
+            '<div class="modal-footer">' +
+                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>' +
+            '</div>' +
+        '</div>' +
+    '</div>';
+
 export default class Modal {
     constructor() {
 
@@ -7,21 +23,7 @@ export default class Modal {
 
         this.modal = document.createElement('div');
         this.modal.id = 'we-modal'
-        this.modal.innerHTML = 
-            '<div class="we-modal-content modal-dialog modal-lg">' +
-                '<div class="modal-content">' +
-                    '<div class="modal-header">' +
-                        '<h5 class="modal-title" id="we-modal-title"></h5>' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                    '</div>' +
-                    '<div class="modal-body" id="we-modal-content"></div>' +
-                    '<div class="modal-footer">' +
-                        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>' +
-                    '</div>' +
-                '</div>' +
-            '</div>';
+        this.modal.innerHTML = template;
 
         document.body.appendChild(this.modal);
     }
@@ -34,15 +36,14 @@ export default class Modal {
 
         style.display = 'block';
 
-        document.querySelectorAll('[data-dismiss="modal"]').forEach(function(e) {
-
-            e.addEventListener('click', function() {
+        document.querySelectorAll('[data-dismiss="modal"]').forEach(e => 
+            e.addEventListener('click', () => {
                 style.display = 'none';
 
                 document.getElementById('we-modal-title').innerHTML = '';
                 document.getElementById('we-modal-content').innerHTML = '';
-            });
-        });
+            })
+        );
     }
 
 }

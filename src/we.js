@@ -1,31 +1,34 @@
 
 import Modal from './modal';
 import Client from './client';
-import { settings } from './settings/settings';
 import Selection from './selection';
 import RowEvent from './event/row';
-import Apps from './settings/apps';
+import Apps from './apps';
 import FileClipboard from './clipboard';
 
 export default class WebExplorer {
 
     data =  {};
+    settings = {};
     path = '/';
     rowListener = {};
 
     constructor(id, server) {
-        
-        this.settings = settings;
+
+        this.server = server;
+
+        // Dependencies
         this.modal = new Modal();
         this.client = new Client(server);
         this.apps = new Apps(this);
         this.clipboard = new FileClipboard(this);
         this.selection = new Selection(this);
 
+        // DOM
         this.e = document.getElementById(id);
         this.e.classList.add('we');
-        this.server = server;
-
+        
+        // Initialization
         this.apps.set('back', () => this.openDir(this.getParent()));
         this.addRowListener('dblclick', rowEvent => {
             if(rowEvent.file) {
@@ -56,6 +59,10 @@ export default class WebExplorer {
         }
 
         this.rowListener[event].push(callback);
+    }
+
+    setSettings(settings) {
+        this.settings = settings;
     }
 
     openDir(path) {
@@ -145,9 +152,5 @@ export default class WebExplorer {
         });
 
         return row + '</tr>';      
-
     }
-
 }
-
-window.WebExplorer = WebExplorer;

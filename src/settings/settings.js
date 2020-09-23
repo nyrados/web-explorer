@@ -1,8 +1,8 @@
 export const settings = {
     rows: ['icon', 'name', 'mime', 'path', 'size'],
     renderRow: {
-        icon: function (file) {
-            const icon = (function() {
+        icon: file => {
+            const icon = (() => {
 
                 if(file.type === 'dir') {
                     return we.settings.icons['directory'];
@@ -59,7 +59,6 @@ export const settings = {
         'video': 'file-video',
         'image': 'file-image',
         'text': 'file-alt',
-
         'directory': 'folder',
         'default': 'file'
     },
