@@ -6,11 +6,10 @@ export default class RowEvent {
         this.event = event;
         this.we = we;
 
-        if(target.dataset.index) {
+        if (target.dataset.index) {
             this.index = parseInt(target.dataset.index);
             this.file = we.data[target.dataset.index];
         }
     }
-    
 
 }

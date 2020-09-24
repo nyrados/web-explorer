@@ -35,4 +35,20 @@ export default function Create(we) {
 
     });
 
+    we.settings.menu.items.copy = {
+        app: 'we-copy',
+        text: 'Copy',
+        before: 'we-clipboard-clear',
+        multiple: true,
+        condition: (we, file) => !!file.name
+    };
+
+    we.settings.menu.items['create-dir'] = {
+        text: 'Create Directory',
+        app: 'we-create-dir'
+    };
+    we.settings.menu.items['create-file'] = {
+        text: 'Create File',
+        app: 'we-create-file'
+    };
 };

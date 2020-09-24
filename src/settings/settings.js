@@ -75,17 +75,6 @@ export const settings = {
                 app: 'we-download',
                 condition: (we, file) => file.type === 'file'
             },
-    
-    
-            'create-dir': {
-                text: 'Create Directory',
-                app: 'we-create-dir'
-            },
-    
-            'create-file': {
-                text: 'Create File',
-                app: 'we-create-file'
-            },
         }
     }
 };
