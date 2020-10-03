@@ -1,11 +1,9 @@
 
-import Modal from './modal';
-import Client from './client';
-import Selection from './selection';
+import Modal from './component/modal';
+import Client from './component/core/client';
+import Selection from './component/core/selection';
 import RowEvent from './event/row';
-import Apps from './apps';
-import FileClipboard from './clipboard';
-import { settings } from './settings/settings';
+import Apps from './component/core/apps';
 
 export default class WebExplorer {
 
@@ -14,11 +12,10 @@ export default class WebExplorer {
     path = '/';
     rowListener = {};
 
-    constructor(id, server) {
+    constructor(id, server, settings) {
 
         this.server = server;
         this.settings = settings;
-
 
         // Dependencies
         this.modal = new Modal();

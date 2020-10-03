@@ -1,6 +1,6 @@
 import FileClipboard from "../clipboard";
 
-export default function Edit(we) {
+export default function edit(we) {
 
     const clipboard = new FileClipboard(we);
 
