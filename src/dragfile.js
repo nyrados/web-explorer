@@ -22,16 +22,17 @@ export default function DragFile(we) {
             return;
         }
         
-        const item = we.data[id];
+
         let path = we.path;
         if (we.path !== '/') {
             path = path + '/';
         }
 
-        const dir = data.app === 'back' ? we.getParent() : path + we.data[data.index].name;
-        
-        we.client.request('rename', item.path, {to: dir + '/'  + item.name}).then(() => {
-            we.openDir(we.path);
-        });
+        const location = data.app === 'back' ? we.getParent() : path + we.data[data.index].name;
+
+        we.selection.each(item => 
+            we.client.request('rename', item.path, {to: location + '/' + item.name})
+                .then(() => we.refresh())
+        );
     });
 };

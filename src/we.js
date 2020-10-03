@@ -17,13 +17,15 @@ export default class WebExplorer {
     constructor(id, server) {
 
         this.server = server;
+        this.settings = settings;
+
 
         // Dependencies
         this.modal = new Modal();
         this.client = new Client(server);
         this.apps = new Apps(this);
         this.selection = new Selection(this);
-        this.settings = settings;
+        
 
         // DOM
         this.e = document.getElementById(id);

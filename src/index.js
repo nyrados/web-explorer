@@ -10,7 +10,7 @@ import WebExplorer from './we';
 window.webExplorer = function(id, server) {
 
     let we = new WebExplorer(id, server);
-    
+
     //Enable Context Menu
     new Menu(we);
 
