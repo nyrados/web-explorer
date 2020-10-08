@@ -2,15 +2,15 @@ import Modal from '../modal';
 
 const modal = new Modal();
 
-export default function Viewer(we) {
+export default function viewer(we) {
 
     we.apps.set('we-viewer-audio', (we, file) => modal.open(file.name, 
-            '<audio controls class="w-100 no-outline">' +
-                '<source ' +
-                    'src="' + we.server + '?action=view&file=' + file.path + '" ' +
-                    'type="' + file.mime + '"' +
-                '>' +
-            '</audio>'
+        '<audio controls class="w-100 no-outline">' +
+            '<source ' +
+                'src="' + we.server + '?action=view&file=' + file.path + '" ' +
+                'type="' + file.mime + '"' +
+            '>' +
+        '</audio>'
     ));
 
     we.apps.set('we-viewer-image', (we, file) => modal.open(file.name, 

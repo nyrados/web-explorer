@@ -20,7 +20,7 @@ function createTrInput(after, complete) {
     });
 }
 
-export default function Create(we) {
+export default function create(we) {
     
     ['file', 'dir'].forEach(type => {
 

@@ -1,7 +1,5 @@
 export default class RowEvent {
-
     constructor(we, target, event) {
-
         this.target = target;
         this.event = event;
         this.we = we;
@@ -11,5 +9,4 @@ export default class RowEvent {
             this.file = we.data[target.dataset.index];
         }
     }
-
 }

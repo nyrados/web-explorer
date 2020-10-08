@@ -1,4 +1,4 @@
-export const settings = {
+export default {
     rows: ['icon', 'name', 'mime', 'path', 'size'],
     renderRow: {
         icon: (file, we) => 

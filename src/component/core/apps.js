@@ -1,4 +1,4 @@
-import Open from "./app/open";
+import Open from "./open";
 
 export default class Apps {
 

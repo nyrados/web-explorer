@@ -1,7 +1,6 @@
 export default class Menu {
 
     constructor(we) {
-
         this.we = we;
 
         this.order = we.settings.menu.order;
@@ -20,7 +19,6 @@ export default class Menu {
         we.addRowListener('contextmenu', rowEvent => this.openMenu(rowEvent));
 
         document.addEventListener('click', () => this.outer.style.display = 'none');
-
     }
 
     openMenu(rowEvent) {

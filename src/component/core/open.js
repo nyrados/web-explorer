@@ -31,7 +31,6 @@ export default class Open {
     }
 
     fetchAppName(file) {
-        
         if(this.rules[file.mime]) {
             return this.rules[file.mime];
         }

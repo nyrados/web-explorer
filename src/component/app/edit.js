@@ -1,9 +1,8 @@
 import FileClipboard from "../clipboard";
 
-export default function Edit(we) {
-    
+export default function edit(we) {
 
-    const clipboard = new FileClipboard();
+    const clipboard = new FileClipboard(we);
 
     we.apps.set('we-delete', (we, file) => {
         we.client.request('delete', file.path).then(() => we.refresh());
@@ -17,7 +16,7 @@ export default function Edit(we) {
     we.apps.set('we-copy', (we, file) => clipboard.copy(file));
     we.apps.set('we-cut', (we, file) => clipboard.cut(file));
 
-    we.apps.set('we-paste', (we) => {
+    we.apps.set('we-paste', we => {
 
         const mode = clipboard.isCut ? 'rename' : 'copy';
         let path = we.path;
