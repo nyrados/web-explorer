@@ -1,11 +1,19 @@
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: {
-      'web-explorer': './src/index.js',
+      'web-explorer': './src/index.ts',
       'style': './scss/we.scss'
     },
+    resolve: {
+      extensions: [ '.tsx', '.ts', '.js' ],
+    },
     module: {
-    rules: [
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
         {
           test: /\.m?js$/,
           exclude: /(node_modules|bower_components)/,

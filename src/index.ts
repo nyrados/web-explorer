@@ -7,21 +7,20 @@ import DragFile from './dragfile';
 import WebExplorer from './we';
 
 
-window.webExplorer = function(id, server) {
+const we = function(id: string, server: string): WebExplorer {
 
     let we = new WebExplorer(id, server);
     
     //Enable Context Menu
     new Menu(we);
 
-    //Enable some apps
+    //Enable other stuff
     Viewer(we);
     Create(we);
     Edit(we);
     DragFile(we);
 
     we.openDir('/');
-
 
     return we;
 };
