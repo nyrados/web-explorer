@@ -8,7 +8,7 @@ import viewer from './component/app/viewer';
 import create from './component/app/create';
 import edit from './component/app/edit';
 
-window.webExplorer = function(id, server) {
+const we = function(id: string, server: string): WebExplorer {
 
     let we = new WebExplorer(id, server, settings);
 
