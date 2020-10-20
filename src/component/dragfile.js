@@ -1,13 +1,13 @@
-class DragFile {
+export default class DragFile {
 
     constructor(we) {
         this.we = we;
     }
 
     register() {
-        we.addRowListener('dragover', e => this.over(e));
-        we.addRowListener('dragstart', e => this.start(e));
-        we.addRowListener('stop', e => this.stop(e));
+        this.we.addRowListener('dragover', e => this.over(e));
+        this.we.addRowListener('dragstart', e => this.start(e));
+        this.we.addRowListener('stop', e => this.stop(e));
     }
 
     start(rowEvent) {
