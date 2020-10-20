@@ -1,5 +1,5 @@
 
-function createTrInput(after, complete) {
+function createTrInput(we, after, complete) {
     let tr = document.createElement('tr');
         tr.innerHTML = 
             '<td colspan="' + we.settings.rows.length + '">' + 
@@ -24,7 +24,7 @@ export default function create(we) {
     
     ['file', 'dir'].forEach(type => {
 
-        we.apps.set('we-create-' + type, (we, file, e) => createTrInput(e.target, (input) => {
+        we.apps.set('we-create-' + type, (we, file, e) => createTrInput(we, e.target, (input) => {
             let create = we.path;
             if (create !== '/') {
                 create += '/';

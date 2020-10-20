@@ -1,7 +1,22 @@
-export default {
+import App from "./component/app/app";
+import { ContextMenuSettings } from "./component/menu";
+import File from "./file";
+import WebExplorer from "./we";
+
+export interface Settings {
+    rows: Array<string>;
+    renderRow: Record<string, App>;
+    fileHandler: Record<string, string>;
+    icons: Record<string, string>;
+    menu: ContextMenuSettings;
+    
+    [key: string]: any;
+}
+
+export const settings: Settings = {
     rows: ['icon', 'name', 'mime', 'path', 'size'],
     renderRow: {
-        icon: (file, we) => 
+        icon: (file: File, we: WebExplorer) => 
             '<td><i class="fas fa-'+ 
                 (() => {
                     if(file.type === 'dir') {
@@ -26,8 +41,7 @@ export default {
                 })() + 
             '"></i></td>'
         ,
-
-        size: file => {
+        size: (file: File) => {
 
             if (!file.size) {
                 return '<td></td>';
@@ -62,19 +76,20 @@ export default {
         'directory': 'folder',
         'default': 'file'
     },
+
     menu: {
         order: ['open', 'download', '-', 'delete', 'copy', 'cut', 'paste', '-', 'create-dir', 'create-file'],
         items: {
-            'open': {
+            open: {
                 text: '<b>Open</b>',
                 app: 'we-open'
             },
     
-            'download': {
+            download: {
                 text: 'Download',
                 app: 'we-download',
-                condition: (we, file) => file.type === 'file'
-            },
+                condition: (we: WebExplorer, file: File) => file.type === 'file'
+            }
         }
     }
 };

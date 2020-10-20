@@ -17,7 +17,7 @@ export default class DragFile {
     over(rowEvent) {
         const data = rowEvent.target.dataset;
 
-        if (data.app === 'back' || (we.data[data.index] && this.we.data[data.index].type === 'dir')) {
+        if (data.app === 'back' || (this.we.data[data.index] && this.we.data[data.index].type === 'dir')) {
             rowEvent.event.preventDefault();
         }
     }

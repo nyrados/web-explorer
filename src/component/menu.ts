@@ -1,6 +1,31 @@
+import RowEvent from "../event/row";
+import File from "../file";
+import WebExplorer from "../we";
+
+export interface ContextMenuSettings {
+    order: Array<string>;
+    items: Record<string, ContextMenuItem>;
+};
+
+export interface ContextMenuItem {
+    text: string;
+    app: string;
+    condition?: (we: WebExplorer, file: File | {}) => boolean;
+    before?: string;
+    multiple?: boolean;
+}
+
 export default class Menu {
 
-    constructor(we) {
+
+    private we: WebExplorer;
+    private order: Array<string>;
+    private items: Record<string, ContextMenuItem>;
+    
+    private outer: HTMLElement;
+    private menu: HTMLElement;
+
+    constructor(we: WebExplorer) {
         this.we = we;
 
         this.order = we.settings.menu.order;
@@ -21,9 +46,9 @@ export default class Menu {
         document.addEventListener('click', () => this.outer.style.display = 'none');
     }
 
-    openMenu(rowEvent) {
+    openMenu(rowEvent: RowEvent) {
                         
-        let file = {};
+        let file: File | {} = {};
 
         if (rowEvent.target.dataset.index) {
             file = this.we.data[rowEvent.target.dataset.index];
@@ -39,7 +64,7 @@ export default class Menu {
         this.order.forEach(item => this.renderItem(item, file, rowEvent));
     }
 
-    renderItem(name, file, rowEvent) {
+    renderItem(name: string, file: File | {}, rowEvent: RowEvent) {
         let a = document.createElement('a');
         a.href = '#';
         a.classList.add('nav-link');
@@ -62,18 +87,18 @@ export default class Menu {
             a.addEventListener('click', () => this.itemClick(item, file, rowEvent));
         }
 
-        if (!item.condition || item.condition(we, file)) {
+        if (!item.condition || item.condition(this.we, file)) {
             this.menu.appendChild(a);
         }
     }
 
-    itemClick(item, file, rowEvent) {
+    itemClick(item: ContextMenuItem, file: File | {}, rowEvent: RowEvent) {
         if(item.before) {
             this.we.apps.call(item.before, file, rowEvent);
         }
 
         if(item.multiple) {
-            this.we.selection.each(selectedFile => 
+            this.we.selection.each((selectedFile: File) => 
                 this.we.apps.call(item.app, selectedFile, rowEvent)
             );  
             return;

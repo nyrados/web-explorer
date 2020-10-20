@@ -1,5 +1,5 @@
 import WebExplorer from './we';
-import settings from './settings';
+import { settings } from './settings';
 
 import DragFile from './component/dragfile';
 import Menu from './component/menu';
@@ -8,9 +8,15 @@ import viewer from './component/app/viewer';
 import create from './component/app/create';
 import edit from './component/app/edit';
 
-const we = function(id: string, server: string): WebExplorer {
+declare global {
+    interface Window {
+        webExplorer: (id: string, server: string) => WebExplorer;
+    }
+}
 
-    let we = new WebExplorer(id, server, settings);
+window.webExplorer = (id: string, server: string): WebExplorer => {
+
+    const we = new WebExplorer(id, server, settings);
 
     //Enable some stuff
     viewer(we);

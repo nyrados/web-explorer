@@ -1,6 +1,17 @@
+
+export interface ServerResponse
+{
+    xhr: XMLHttpRequest;
+    action: string;
+    file: string;
+    data: Record<any, any>;
+}
+
 export default class Client {
 
-    methods = {
+
+    private server: string;
+    private methods: {[key: string]: string} = {
         list: 'GET',
         view: 'GET',
         create_file: 'GET',
@@ -8,13 +19,13 @@ export default class Client {
         delete: 'GET',
         rename: 'GET',
         copy: 'GET'
-    }
+    };
 
-    constructor(server) {
+    constructor(server: string) {
         this.server = server;
     }
 
-    request(action, file, data = {}) {
+    public request(action: string, file: string, data: Record<string, string> = {}) {
         if (!this.methods[action]) {
             throw new Error('Unsupported action: ' + action);
         }
@@ -42,7 +53,7 @@ export default class Client {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
 
-                    let result = {
+                    let result: ServerResponse = {
                         xhr: xhr,
                         action: action,
                         file: file,

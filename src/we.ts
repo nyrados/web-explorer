@@ -1,20 +1,29 @@
 
 import Modal from './component/modal';
-import Client from './component/core/client';
+import Client, { ServerResponse } from './component/core/client';
 import Selection from './component/core/selection';
 import RowEvent from './event/row';
 import Apps from './component/core/apps';
+import File from './file';
+import { Settings } from './settings';
 
 export default class WebExplorer {
 
-    data =  {};
-    settings = {};
-    path = '/';
-    rowListener = {};
+    public data: Array<File> = [];
+    public settings: Settings;
+    public path: string = '/';
+    
+    public modal: Modal = new Modal();
+    public client: Client;
+    public apps: Apps;
+    public selection: Selection;
 
-    constructor(id, server, settings) {
+    public e: Element;
 
-        this.server = server;
+    private rowListener: {[key: string]: Array<Function>} = {};
+
+    constructor(id: string, server: string, settings: Settings) {
+
         this.settings = settings;
 
         // Dependencies
@@ -22,7 +31,6 @@ export default class WebExplorer {
         this.client = new Client(server);
         this.apps = new Apps(this);
         this.selection = new Selection(this);
-        
 
         // DOM
         this.e = document.getElementById(id);
@@ -30,7 +38,7 @@ export default class WebExplorer {
         
         // Initialization
         this.apps.set('back', () => this.openDir(this.getParent()));
-        this.addRowListener('dblclick', rowEvent => {
+        this.addRowListener('dblclick', (rowEvent: RowEvent) => {
             if(rowEvent.file) {
                 return this.apps.call('open', rowEvent.file, rowEvent.event);
             }
@@ -52,7 +60,7 @@ export default class WebExplorer {
         return split.join('/');
     }
 
-    addRowListener(event, callback) {
+    addRowListener(event: string, callback: (rowevent: RowEvent) => any) {
         
         if(!Array.isArray(this.rowListener[event])) {
             this.rowListener[event] = [];
@@ -61,26 +69,26 @@ export default class WebExplorer {
         this.rowListener[event].push(callback);
     }
 
-    setSettings(settings) {
+    setSettings(settings: Settings) {
         this.settings = settings;
     }
 
-    openDir(path) {
+    async openDir(path: string) {
 
         const we = this;
 
         path = path === '' ? '/' : path;
 
         return this.client.request('list', path)
-            .then(response => {
+            .then((response: ServerResponse) => {
 
                 this.path = path;
 
-                response.data.forEach((value, index) => {
+                response.data.forEach((value: string, index: number) => {
                     response.data[index]['index'] = index;
                 });
 
-                we.data = response.data;
+                we.data = response.data as Array<File>;
 
                 document.querySelectorAll("[data-content='we-current']").forEach(function(e) {
                     e.innerHTML = path;
@@ -94,12 +102,13 @@ export default class WebExplorer {
                         let before = 0;
                         let tr = '<tr data-app="back" class="we-row">';
                         
-                        this.settings.rows.every(value => {
+                        this.settings.rows.every((value: string) => {
                             if(value === 'name') {
                                 return false;
                             }
 
                             before++;
+
 
                             return true;
                         });
@@ -119,7 +128,7 @@ export default class WebExplorer {
                     })();
                 }
 
-                response.data.forEach((file, index) => html += this.renderRow(file, index));
+                response.data.forEach((file: File, index: number) => html += this.renderRow(file, index));
                 we.e.innerHTML = html;
             })
 
@@ -134,20 +143,20 @@ export default class WebExplorer {
             );
     }
 
-    renderRow(file, index) {
+    private renderRow(file: File, index: number): string {
         let row = '<tr class="we-row" draggable="true" data-app="we-open" data-index="' + index + '">';
 
-        this.settings.rows.forEach(rowName => 
+        this.settings.rows.forEach((rowName: string) => 
             row += (() => {
                 if (this.settings.renderRow[rowName] instanceof Function) {
                     return this.settings.renderRow[rowName](file, this);
                 }
 
-                if (typeof file[rowName] === 'undefined') {
-                    return '<td></td>';
+                if(file.hasOwnProperty(rowName)) {
+                    return '<td>' + file[rowName] + '</td>'
                 }
 
-                return '<td>' + file[rowName] + '</td>';
+                return '<td></td>';
             })()
         );
 

@@ -1,5 +1,5 @@
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: {
       'web-explorer': './src/index.ts',
       'style': './scss/we.scss'
