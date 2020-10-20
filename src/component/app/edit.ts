@@ -1,14 +1,16 @@
+import File from "../../file";
+import WebExplorer from "../../we";
 import FileClipboard from "../clipboard";
 
-export default function edit(we) {
+export default function edit(we: WebExplorer) {
 
     const clipboard = new FileClipboard(we);
 
-    we.apps.set('we-delete', (we, file) => {
+    we.apps.set('we-delete', (we: WebExplorer, file: File) => {
         we.client.request('delete', file.path).then(() => we.refresh());
     });
 
-    we.apps.set('we-download', (we, file) =>
+    we.apps.set('we-download', (we: WebExplorer, file: File) =>
         window.location.href = we.server + '?action=download&file=' + file.path
     );
 
@@ -34,14 +36,14 @@ export default function edit(we) {
         text: 'Copy',
         before: 'we-clipboard-clear',
         multiple: true,
-        condition: (we, file) => !!file.name
+        condition: (we: WebExplorer, file: File) => !!file.name
     };
 
     we.settings.menu.items.delete = {
         text: 'Delete',
         app: 'we-delete',
         multiple: true,
-        condition: (we, file) => !!file.name
+        condition: (we: WebExplorer, file: File) => !!file.name
     };
 
     we.settings.menu.items.cut = {
@@ -49,14 +51,14 @@ export default function edit(we) {
         app: 'we-cut',
         before: 'we-clipboard-clear',
         multiple: true,
-        condition: (we, file) => !!file.name
+        condition: (we: WebExplorer, file: File) => !!file.name
     };
 
     we.settings.menu.items.paste = {
         text: 'Paste',
         app: 'we-paste',
         condition: we => {
-            return true || Object.keys(we.clipboard.items).length !== 0;
+            return true || Object.keys(clipboard.clipboard).length !== 0;
         }
     };
 };

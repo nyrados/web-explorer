@@ -16,7 +16,7 @@ export interface Settings {
 export const settings: Settings = {
     rows: ['icon', 'name', 'mime', 'path', 'size'],
     renderRow: {
-        icon: (file: File, we: WebExplorer) => 
+        icon: (we: WebExplorer, file: File) => 
             '<td><i class="fas fa-'+ 
                 (() => {
                     if(file.type === 'dir') {
@@ -41,7 +41,7 @@ export const settings: Settings = {
                 })() + 
             '"></i></td>'
         ,
-        size: (file: File) => {
+        size: (we: WebExplorer, file: File) => {
 
             if (!file.size) {
                 return '<td></td>';

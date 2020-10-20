@@ -9,16 +9,18 @@ import { Settings } from './settings';
 
 export default class WebExplorer {
 
-    public data: Array<File> = [];
-    public settings: Settings;
-    public path: string = '/';
+    data: Array<File> = [];
+    settings: Settings;
+    path: string = '/';
     
-    public modal: Modal = new Modal();
-    public client: Client;
-    public apps: Apps;
-    public selection: Selection;
+    modal: Modal = new Modal();
+    client: Client;
+    apps: Apps;
+    selection: Selection;
 
-    public e: Element;
+    server: string;
+
+    e: Element;
 
     private rowListener: {[key: string]: Array<Function>} = {};
 
@@ -31,6 +33,7 @@ export default class WebExplorer {
         this.client = new Client(server);
         this.apps = new Apps(this);
         this.selection = new Selection(this);
+        this.server = server;
 
         // DOM
         this.e = document.getElementById(id);

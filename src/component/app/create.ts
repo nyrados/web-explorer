@@ -1,5 +1,7 @@
+import File from "../../file";
+import WebExplorer from "../../we";
 
-function createTrInput(we, after, complete) {
+function createTrInput(we: WebExplorer, after: HTMLElement, complete: (e: HTMLInputElement) => void) {
     let tr = document.createElement('tr');
         tr.innerHTML = 
             '<td colspan="' + we.settings.rows.length + '">' + 
@@ -20,19 +22,19 @@ function createTrInput(we, after, complete) {
     });
 }
 
-export default function create(we) {
-    
+export default function create(we: WebExplorer) {
+
     ['file', 'dir'].forEach(type => {
-
-        we.apps.set('we-create-' + type, (we, file, e) => createTrInput(we, e.target, (input) => {
-            let create = we.path;
-            if (create !== '/') {
-                create += '/';
-            }
+        we.apps.set('we-create-' + type, (we: WebExplorer, file: File, e: FocusEvent) => 
+            createTrInput(we, e.target as HTMLElement, (input) => {
+                let create = we.path;
+                if (create !== '/') {
+                    create += '/';
+                }
     
-            we.client.request('create_' + type, create + input.value).then(() => we.refresh());
-        }));
-
+                we.client.request('create_' + type, create + input.value).then(() => we.refresh());
+            }
+        ));
     });
 
     we.settings.menu.items.copy = {
@@ -40,7 +42,7 @@ export default function create(we) {
         text: 'Copy',
         before: 'we-clipboard-clear',
         multiple: true,
-        condition: (we, file) => !!file.name
+        condition: (we, file) => file !== {}
     };
 
     we.settings.menu.items['create-dir'] = {

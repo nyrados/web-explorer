@@ -9,7 +9,6 @@ export interface ServerResponse
 
 export default class Client {
 
-
     private server: string;
     private methods: {[key: string]: string} = {
         list: 'GET',
@@ -39,8 +38,6 @@ export default class Client {
         const query = Object.keys(data)
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
             .join('&');
-
-        
 
         if (method === 'GET') {
             url += '&' + query;

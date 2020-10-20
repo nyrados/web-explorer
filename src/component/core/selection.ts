@@ -1,59 +1,63 @@
+import RowEvent from "../../event/row";
+import File from "../../file";
+import WebExplorer from "../../we";
+
 export default class Selection {
 
-    items = {};
+    items: Array<File> = [];
 
-    constructor(we) {
+    private we: WebExplorer;
+
+    constructor(we: WebExplorer) {
         this.we = we;
         this.we.addRowListener('click', rowEvent => this.clickListener(rowEvent));
         this.we.addRowListener('contextmenu', rowEvent => this.contextListener(rowEvent));
     }
 
-    clear() {
-        this.items = {};
+    clear(): void {
+        this.items = [];
 
-        Array.prototype.slice.call(this.we.e.children).forEach(child => {
+        Array.prototype.slice.call(this.we.e.children).forEach((child: Element) => {
             child.classList.remove('we-selected');
         });
     } 
 
-    select(index) {
+    select(index: number | number[]) {
         this.clear();
 
         if(!Array.isArray(index)) {
-            index = [parseInt(index)];
+            index = [index];
         }
 
-        index.forEach(index => {
-            this.items[parseInt(index)] = this.we.data[index];
+        index.forEach((i: number) => {
+            this.items[i] = this.we.data[i];
             this.we.e.querySelector('[data-index="' + index + '"]').classList.add('we-selected')
         });
     }
 
-    each(callback) {
-        Object.values(this.items).forEach(file => callback(file));
+    each(callback: (file: File) => void): void {
+        this.items.forEach(callback);
     }
 
-    contextListener(rowEvent) {
+    contextListener(rowEvent: RowEvent) {
         rowEvent.event.preventDefault();
 
-        if (!rowEvent.target.dataset.index || this.items[rowEvent.target.dataset.index]) {
+        if (!rowEvent.target.dataset.index || this.items[rowEvent.target.dataset.index as unknown as number]) {
             return;
         }
 
         this.clear();
-        this.select(rowEvent.target.dataset.index);
+        this.select(rowEvent.target.dataset.index as unknown as number);
     }
 
-    clickListener(rowEvent) {
-        const event = rowEvent.event;
-        const current = rowEvent.target.dataset.index;
-        let index = [];
-        
-        if (event.ctrlKey || event.shiftKey) {
-            index = index.concat(Object.keys(this.items));
-        }
+    clickListener(rowEvent: RowEvent) {
+        const event = rowEvent.event as KeyboardEvent;
+        const current = rowEvent.target.dataset.index as unknown as number;
+        let index: number[] = [];
 
-        index = index.map(index => parseInt(index));
+        if (event.ctrlKey || event.shiftKey) {
+            index = index.concat(Array.from(this.items.keys()));
+        }
 
         if(event.shiftKey && index.length > 0) {
             if (Math.min(...index) < current) {
@@ -68,7 +72,7 @@ export default class Selection {
         }
         
         if (current || current === 0) {
-            index.push(parseInt(current));
+            index.push(current); 
         }
 
         this.select(index);

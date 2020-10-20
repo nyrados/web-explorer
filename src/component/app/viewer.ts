@@ -1,8 +1,11 @@
+import File from '../../file';
+import WebExplorer from '../../we';
+import { ServerResponse } from '../core/client';
 import Modal from '../modal';
 
 const modal = new Modal();
 
-export default function viewer(we) {
+export default function viewer(we: WebExplorer) {
 
     we.apps.set('we-viewer-audio', (we, file) => modal.open(file.name, 
         '<audio controls class="w-100 no-outline">' +
@@ -31,7 +34,9 @@ export default function viewer(we) {
     ));
 
     we.apps.set('we-viewer-text', (we, file) => we.client.request('view', file.path)
-        .then(response => modal.open('View: ' + file.name, '<pre>' + response.xhr.responseText + '</pre>'))
+        .then((response: ServerResponse) => 
+            modal.open('View: ' + file.name, '<pre>' + response.xhr.responseText + '</pre>')
+        )
     );
 
 };

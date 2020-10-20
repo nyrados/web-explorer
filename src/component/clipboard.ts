@@ -1,17 +1,13 @@
 export default class FileClipboard {
 
-    clipboard = [];
+    clipboard: Array<File> = [];
     isCut = false;
 
-    constructor(we) {
-        this.we = we;
-    }
-
-    clear() {
+    clear(): void {
         this.clipboard = [];
     }
 
-    copy(file) {
+    copy(file: File): void {
 
         if (this.isCut) {
             this.clear();
@@ -21,11 +17,11 @@ export default class FileClipboard {
         this.add(file);
     }
 
-    add(file) {
+    add(file: File): void {
         this.clipboard.push(file);
     }
 
-    cut(file) {
+    cut(file: File): void {
         if(!this.isCut) {
             this.clear();
             this.isCut = true;

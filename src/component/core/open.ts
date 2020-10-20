@@ -1,13 +1,17 @@
+import File from "../../file";
+import WebExplorer from "../../we";
+
 export default class Open {
 
-    rules = {};
+    private rules: Record<string, string>;
+    private we: WebExplorer;
 
-    constructor(we) {
+    constructor(we: WebExplorer) {
         this.we = we;   
         this.rules = we.settings.fileHandler;
     }
 
-    call(file) {
+    call(file: File) {
 
         if (file.type === 'dir') {
             return this.openDir(file);
@@ -17,20 +21,20 @@ export default class Open {
     }
 
     get() {
-        return (we, file = {}, event = {}) => {
+        return (we: WebExplorer, file: File) => {
             this.call(file);
         }
     }
 
-    openDir(file) {
+    private openDir(file: File) {
         this.we.openDir(file.path);
     }
 
-    openFile(file) {
+    private openFile(file: File) {
         this.we.apps.call(this.fetchAppName(file), file);
     }
 
-    fetchAppName(file) {
+    private fetchAppName(file: File) {
         if(this.rules[file.mime]) {
             return this.rules[file.mime];
         }

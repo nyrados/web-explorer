@@ -51,13 +51,15 @@ export default class Menu {
         let file: File | {} = {};
 
         if (rowEvent.target.dataset.index) {
-            file = this.we.data[rowEvent.target.dataset.index];
+            file = this.we.data[rowEvent.target.dataset.index as unknown as number];
         }
 
         rowEvent.event.preventDefault();
 
-        this.outer.style.left = rowEvent.event.pageX + 'px';
-        this.outer.style.top = rowEvent.event.pageY + 'px';
+        const event = rowEvent.event as MouseEvent;
+
+        this.outer.style.left = event.pageX + 'px';
+        this.outer.style.top = event.pageY + 'px';
         this.outer.style.display = 'block';
         this.menu.innerHTML = '';
 
