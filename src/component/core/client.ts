@@ -14,11 +14,11 @@ export default class Client {
     private methods: {[key: string]: string} = {
         list: 'GET',
         view: 'GET',
-        create_file: 'GET',
-        create_dir: 'GET',
-        delete: 'GET',
-        rename: 'GET',
-        copy: 'GET'
+        create_file: 'POST',
+        create_dir: 'POST',
+        delete: 'POST',
+        rename: 'POST',
+        copy: 'POST'
     };
 
     constructor(server: string) {
@@ -40,13 +40,17 @@ export default class Client {
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
             .join('&');
 
+        
+
         if (method === 'GET') {
             url += '&' + query;
-        } else {
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         }
 
         xhr.open(method, url, true);
+
+        if (method !== 'GET') {
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        }
 
         return new Promise(function(resolve, reject) {
 
@@ -65,6 +69,7 @@ export default class Client {
                     if (xhr.status.toString()[0] === '2') {
                         resolve(result);
                     } else {
+                        console.log(result);
                         reject(result);
                     }
                 }
