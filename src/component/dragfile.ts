@@ -12,7 +12,7 @@ export default class DragFile {
     register() {
         this.we.addRowListener('dragover', e => this.over(e));
         this.we.addRowListener('dragstart', e => this.start(e));
-        this.we.addRowListener('dragdrop', e => this.drop(e));
+        this.we.addRowListener('drop', e => this.drop(e));
     }
 
     private start(rowEvent: RowEvent) {
@@ -30,6 +30,7 @@ export default class DragFile {
     }
 
     private drop(rowEvent: RowEvent) {
+
         rowEvent.event.preventDefault();
     
         const id = (rowEvent.event as DragEvent).dataTransfer.getData('application/we-file-index');

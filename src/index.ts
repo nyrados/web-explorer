@@ -1,12 +1,14 @@
 import WebExplorer from './we';
 import { settings } from './settings';
 
-import DragFile from './component/dragfile';
-import Menu from './component/menu';
-
 import viewer from './component/app/viewer';
 import create from './component/app/create';
 import edit from './component/app/edit';
+
+import DragFile from './component/dragfile';
+import Menu from './component/menu';
+
+import handleModalError from './component/modal_error_handler';
 
 declare global {
     interface Window {
@@ -17,6 +19,8 @@ declare global {
 window.webExplorer = (id: string, server: string): WebExplorer => {
 
     const we = new WebExplorer(id, server, settings);
+
+    we.client.setErrorHandler(handleModalError);
 
     //Enable some stuff
     viewer(we);

@@ -1,3 +1,5 @@
+import File from "../file";
+
 export default class FileClipboard {
 
     clipboard: Array<File> = [];

@@ -7,9 +7,19 @@ export interface ServerResponse
     data: Record<any, any>;
 }
 
+export interface ClientError extends ServerResponse
+{
+    data: {
+        error: string;
+        message: string;
+    }
+}
+
 export default class Client {
 
     private server: string;
+    private handler: (error: ClientError) => void;
+
     private methods: {[key: string]: string} = {
         list: 'GET',
         view: 'GET',
@@ -22,9 +32,17 @@ export default class Client {
 
     constructor(server: string) {
         this.server = server;
+        this.setErrorHandler(error => {
+            console.error('Error appeared on request:');
+            console.error(error);
+        });
     }
 
-    public request(action: string, file: string, data: Record<string, string> = {}) {
+    setErrorHandler(callback: (error: ClientError) => void) {
+        this.handler = callback;
+    }
+
+    request(action: string, file: string, data: Record<string, string> = {}) {
         if (!this.methods[action]) {
             throw new Error('Unsupported action: ' + action);
         }
@@ -49,9 +67,9 @@ export default class Client {
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         }
 
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
 
-            xhr.onreadystatechange = function () {
+            xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
 
                     let result: ServerResponse = {
@@ -66,7 +84,7 @@ export default class Client {
                     if (xhr.status.toString()[0] === '2') {
                         resolve(result);
                     } else {
-                        console.log(result);
+                        this.handler(result as ClientError);
                         reject(result);
                     }
                 }

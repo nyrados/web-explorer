@@ -152,7 +152,7 @@ export default class WebExplorer {
         this.settings.rows.forEach((rowName: string) => 
             row += (() => {
                 if (this.settings.renderRow[rowName] instanceof Function) {
-                    return this.settings.renderRow[rowName](file, this);
+                    return this.settings.renderRow[rowName](this, file);
                 }
 
                 if(file.hasOwnProperty(rowName)) {

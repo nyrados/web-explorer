@@ -4,7 +4,7 @@ import FileClipboard from "../clipboard";
 
 export default function edit(we: WebExplorer) {
 
-    const clipboard = new FileClipboard(we);
+    const clipboard = new FileClipboard();
 
     we.apps.set('we-delete', (we: WebExplorer, file: File) => {
         we.client.request('delete', file.path).then(() => we.refresh());

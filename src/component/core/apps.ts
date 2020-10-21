@@ -5,7 +5,7 @@ import Open from "./open";
 
 export default class Apps {
 
-    apps: Record<string, App>;
+    apps: Record<string, App> = {};
     we: WebExplorer;
 
     constructor(we: WebExplorer) {

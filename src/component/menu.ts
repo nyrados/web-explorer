@@ -48,7 +48,7 @@ export default class Menu {
 
     openMenu(rowEvent: RowEvent) {
                         
-        let file: File | {} = {};
+        let file: File;
 
         if (rowEvent.target.dataset.index) {
             file = this.we.data[rowEvent.target.dataset.index as unknown as number];
@@ -66,7 +66,7 @@ export default class Menu {
         this.order.forEach(item => this.renderItem(item, file, rowEvent));
     }
 
-    renderItem(name: string, file: File | {}, rowEvent: RowEvent) {
+    renderItem(name: string, file?: File, rowEvent?: RowEvent) {
         let a = document.createElement('a');
         a.href = '#';
         a.classList.add('nav-link');
@@ -94,18 +94,18 @@ export default class Menu {
         }
     }
 
-    itemClick(item: ContextMenuItem, file: File | {}, rowEvent: RowEvent) {
+    itemClick(item: ContextMenuItem, file?: File, rowEvent?: RowEvent) {
         if(item.before) {
-            this.we.apps.call(item.before, file, rowEvent);
+            this.we.apps.call(item.before, file, rowEvent.event);
         }
 
         if(item.multiple) {
             this.we.selection.each((selectedFile: File) => 
-                this.we.apps.call(item.app, selectedFile, rowEvent)
+                this.we.apps.call(item.app, selectedFile, rowEvent.event)
             );  
             return;
         }
 
-        this.we.apps.call(item.app, file, rowEvent);
+        this.we.apps.call(item.app, file, rowEvent.event);
     }
 }
