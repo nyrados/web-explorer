@@ -52,18 +52,18 @@ export default class WebExplorer {
         });
     };
 
-    refresh() {
+    refresh(): void {
         this.openDir(this.path);
     }
 
-    getParent() {
+    getParent(): string {
         let split = this.path.split('/');
         split.pop();
 
         return split.join('/');
     }
 
-    addRowListener(event: string, callback: (rowevent: RowEvent) => any) {
+    addRowListener(event: string, callback: (rowevent: RowEvent) => any): void {
         
         if(!Array.isArray(this.rowListener[event])) {
             this.rowListener[event] = [];
@@ -72,7 +72,7 @@ export default class WebExplorer {
         this.rowListener[event].push(callback);
     }
 
-    setSettings(settings: Settings) {
+    setSettings(settings: Settings): void {
         this.settings = settings;
     }
 

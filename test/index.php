@@ -11,7 +11,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <td colspan="3"><b>Current:</b> <span data-content='we-current'>/</span></td>
+                        <td colspan="5"><b>Current:</b> <span data-content='we-current'>/</span></td>
                     </tr>
                     <tr>
                         <th colspan="2">Name</th>

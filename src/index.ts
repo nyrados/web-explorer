@@ -16,7 +16,7 @@ declare global {
     }
 }
 
-window.webExplorer = (id: string, server: string): WebExplorer => {
+window.webExplorer = (id, server): WebExplorer => {
 
     const we = new WebExplorer(id, server, settings);
 

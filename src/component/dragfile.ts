@@ -33,10 +33,10 @@ export default class DragFile {
 
         rowEvent.event.preventDefault();
     
-        const id = (rowEvent.event as DragEvent).dataTransfer.getData('application/we-file-index');
+        const fileIndex = (rowEvent.event as DragEvent).dataTransfer.getData('application/we-file-index');
         const data = rowEvent.target.dataset;
 
-        if(id === '' || id === data.index || !this.we.data[id as unknown as number]) {
+        if(fileIndex === '' || parseInt(fileIndex) === parseInt(data.index) || !this.we.data[parseInt(fileIndex)]) {
             return false;
         }
         
@@ -45,7 +45,7 @@ export default class DragFile {
             path = path + '/';
         }
 
-        const location = data.app === 'back' ? this.we.getParent() : path + this.we.data[data.index as unknown as number].name;
+        const location = data.app === 'back' ? this.we.getParent() : path + this.we.data[parseInt(data.index)].name;
 
         this.we.selection.each(item => 
             this.we.client.request('rename', item.path, {to: location + '/' + item.name})

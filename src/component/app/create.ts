@@ -1,7 +1,7 @@
 import File from "../../file";
 import WebExplorer from "../../we";
 
-function createTrInput(we: WebExplorer, after: HTMLElement, complete: (e: HTMLInputElement) => void) {
+function createTrInput(we: WebExplorer, after: HTMLElement, complete: (e: HTMLInputElement) => void): void {
     let tr = document.createElement('tr');
         tr.innerHTML = 
             '<td colspan="' + we.settings.rows.length + '">' + 
@@ -25,8 +25,10 @@ function createTrInput(we: WebExplorer, after: HTMLElement, complete: (e: HTMLIn
 export default function create(we: WebExplorer) {
 
     ['file', 'dir'].forEach(type => {
-        we.apps.set('we-create-' + type, (we: WebExplorer, file: File, e: FocusEvent) => 
-            createTrInput(we, e.target as HTMLElement, (input) => {
+        we.apps.set('we-create-' + type, (we, file, e) => 
+            createTrInput(we, (e.target as HTMLElement).parentElement, (input) => {
+                
+
                 let create = we.path;
                 if (create !== '/') {
                     create += '/';
