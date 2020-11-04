@@ -4,7 +4,9 @@ import WebExplorer from "../../we";
 
 export default class Selection {
 
-    items: Record<number, File> = {};
+    items: {
+        [key: number]: File
+    };
 
     private we: WebExplorer;
 
@@ -59,30 +61,36 @@ export default class Selection {
         const event = rowEvent.event as KeyboardEvent;
         const current = parseInt(rowEvent.target.dataset.index);
 
-        let index: number[] = [];
+        let selected: number[] = [];
 
+        // If ctrl or shift is pushed, all selected keys will stay in selection
         if (event.ctrlKey || event.shiftKey) {
-            index = index.concat(
-                Object.keys(this.items).map(string => parseInt(string))
-            );
+            selected = Object.keys(this.items).map(string => parseInt(string));
         }
 
-        if(event.shiftKey && index.length > 0) {
-            if (Math.min(...index) < current) {
-                for(let i = Math.max(...index) + 1; i < current; i++) {
-                    index.push(i);
+        if(event.shiftKey) {
+
+            // The smallest selected index is smaller than the current (current is below)
+            if (Math.min(...selected) < current) {
+
+                // Go the row list down (via increaing index) and add all indexes until the current index is reached
+                for(let i = Math.max(...selected) + 1; i < current; i++) {
+                    selected.push(i);
                 }
-            } else {
-                for(let i = Math.min(...index) - 1; i > current; i--) {
-                    index.push(i);
+            } 
+            
+            else {
+
+                // Go the list up (via decreasing) and add all indexes until the current index is reached
+                for(let i = Math.min(...selected) - 1; i > current; i--) {
+                    selected.push(i);
                 }
             }
         }
         
-        if (current || current === 0) {
-            index.push(current); 
-        }
+        // Add current index to selection
+        selected.push(current); 
 
-        this.select(index);
+        this.select(selected);
     }
 }
