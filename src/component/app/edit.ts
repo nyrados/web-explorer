@@ -5,7 +5,7 @@ import FileClipboard from "../clipboard";
 export default function edit(we: WebExplorer) {
 
     const clipboard = new FileClipboard();
-
+    
     we.apps.set('we-delete', (we: WebExplorer, file: File) => {
         we.client.request('delete', file.path).then(() => we.refresh());
     });
@@ -36,14 +36,14 @@ export default function edit(we: WebExplorer) {
         text: 'Copy',
         before: 'we-clipboard-clear',
         multiple: true,
-        condition: (we: WebExplorer, file: File) => !!file.name
+        condition: (we: WebExplorer, file?: File) => !!file
     };
 
     we.settings.menu.items.delete = {
         text: 'Delete',
         app: 'we-delete',
         multiple: true,
-        condition: (we: WebExplorer, file: File) => !!file.name
+        condition: (we: WebExplorer, file?: File) => !!file
     };
 
     we.settings.menu.items.cut = {
@@ -51,14 +51,12 @@ export default function edit(we: WebExplorer) {
         app: 'we-cut',
         before: 'we-clipboard-clear',
         multiple: true,
-        condition: (we: WebExplorer, file: File) => !!file.name
+        condition: (we: WebExplorer, file?: File) => !!file
     };
 
     we.settings.menu.items.paste = {
         text: 'Paste',
         app: 'we-paste',
-        condition: we => {
-            return true || Object.keys(clipboard.clipboard).length !== 0;
-        }
+        condition: we => !clipboard.isEmpty()
     };
 };

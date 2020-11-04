@@ -77,12 +77,7 @@ export default class WebExplorer {
     }
 
     async openDir(path: string) {
-
-        const we = this;
-
-        path = path === '' ? '/' : path;
-
-        return this.client.request('list', path)
+        return this.client.request('list',path === '' ? '/' : path)
             .then((response: ServerResponse) => {
 
                 this.path = path;
@@ -91,59 +86,18 @@ export default class WebExplorer {
                     response.data[index]['index'] = index;
                 });
 
-                we.data = response.data as Array<File>;
+                this.data = response.data as Array<File>;
 
                 document.querySelectorAll("[data-content='we-current']").forEach(function(e) {
                     e.innerHTML = path;
                 });
 
-                let html = '';
-
-                if (path !== '/') {
-                    // Render Back Row at first tr
-                    html += (() => {
-                        let before = 0;
-                        let tr = '<tr data-app="back" class="we-row">';
-                        
-                        this.settings.rows.every((value: string) => {
-                            if(value === 'name') {
-                                return false;
-                            }
-
-                            before++;
-
-
-                            return true;
-                        });
-
-                        let after = this.settings.rows.length - before - 1;
-                        if(before > 0) {
-                            tr += '<td colspan="' + before + '"></td>'
-                        }
-
-                        tr += '<td>..</td>';
-
-                        if(after > 0) {
-                           tr += '<td colspan="' + after + '"></td>'
-                        }
-
-                        return tr + '</tr>';
-                    })();
-                }
-
+                let html = path !== '/' ? this.renderBackRow() : '';
                 response.data.forEach((file: File, index: number) => html += this.renderRow(file, index));
-                we.e.innerHTML = html;
+                this.e.innerHTML = html;
             })
 
-            .then(() =>
-                we.e.querySelectorAll('tr').forEach(e =>
-                    Object.keys(this.rowListener).forEach(event => 
-                        this.rowListener[event].forEach(listener => 
-                            e.addEventListener(event, rowEvent => listener(new RowEvent(this, e, rowEvent)))
-                        )
-                    )
-                )
-            );
+            .then(() => this.addEventListenerToRows());
     }
 
     private renderRow(file: File, index: number): string {
@@ -165,4 +119,43 @@ export default class WebExplorer {
 
         return row + '</tr>';      
     }
+
+    private renderBackRow(): string { 
+        let before = 0;
+        let tr = '<tr data-app="back" class="we-row">';
+        
+        this.settings.rows.every(value => {
+            if(value === 'name') {
+                return false;
+            }
+
+            before++;
+
+            return true;
+        });
+
+        let after = this.settings.rows.length - before - 1;
+        if(before > 0) {
+            tr += '<td colspan="' + before + '"></td>'
+        }
+
+        tr += '<td>..</td>';
+
+        if(after > 0) {
+            tr += '<td colspan="' + after + '"></td>'
+        }
+
+        return tr + '</tr>';
+    }
+
+    private addEventListenerToRows(): void {
+        this.e.querySelectorAll('tr').forEach(e =>
+            Object.keys(this.rowListener).forEach(event => 
+                this.rowListener[event].forEach(listener => 
+                    e.addEventListener(event, rowEvent => listener(new RowEvent(this, e, rowEvent)))
+                )
+            )
+        );
+    }
+
 }

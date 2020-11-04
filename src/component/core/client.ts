@@ -4,7 +4,9 @@ export interface ServerResponse
     xhr: XMLHttpRequest;
     action: string;
     file: string;
-    data: Record<any, any>;
+    data: { 
+        [key: string]: any
+    };
 }
 
 export interface ClientError extends ServerResponse

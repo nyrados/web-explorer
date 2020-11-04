@@ -88,7 +88,7 @@ export const settings: Settings = {
             download: {
                 text: 'Download',
                 app: 'we-download',
-                condition: (we: WebExplorer, file: File) => file.type === 'file'
+                condition: (we: WebExplorer, file?: File) => !!file && file.type === 'file'
             }
         }
     }

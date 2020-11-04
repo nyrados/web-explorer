@@ -4,39 +4,56 @@ import { ServerResponse } from '../core/client';
 import Modal from '../modal';
 
 const modal = new Modal();
+const prefix = 'we-viewer-';
+const apps: Record<string, (we?: WebExplorer, file?: File) => string> = {
+    'audio':   renderAudioHTML,
+    'video':   renderVideoHTML,
+    'image':   renderImageHTML,
+    'default': renderDefaultHTML
+}
 
-export default function viewer(we: WebExplorer) {
+function renderText(we: WebExplorer, file: File): void {
+    we.client.request('view', file.path)
+        .then((response: ServerResponse) => 
+            modal.open('View: ' + file.name, '<pre>' + response.xhr.responseText + '</pre>')
+        );
+}
 
-    we.apps.set('we-viewer-audio', (we, file) => modal.open(file.name, 
+function renderAudioHTML(we: WebExplorer, file: File): string {
+    return 
         '<audio controls class="w-100 no-outline">' +
-            '<source ' +
+                '<source ' +
                 'src="' + we.server + '?action=view&file=' + file.path + '" ' +
                 'type="' + file.mime + '"' +
             '>' +
-        '</audio>'
-    ));
+        '</audio>';
+}
 
-    we.apps.set('we-viewer-image', (we, file) => modal.open(file.name, 
-        '<img class="w-100" src="' + we.server + '?action=view&file=' + file.path + '">'
-    ));
-
-    we.apps.set('we-viewer-video', (we, file) => modal.open(file.name, 
+function renderVideoHTML(we: WebExplorer, file: File): string {
+    return 
         '<video controls class="w-100">' +
             '<source ' +
                 'src="' + we.server + '?action=view&file=' + file.path + '" ' +
                 'type="' + file.mime + '"' +
             '>' +
-        '</video>'
-    ));
+        '</video>';
+}
 
-    we.apps.set('we-viewer-default', (we, file) => modal.open(file.name, 
-        '<p>No file viewer is integrated!</p>'
-    ));
+function renderImageHTML(we: WebExplorer, file: File): string {
+    return '<img class="w-100" src="' + we.server + '?action=view&file=' + file.path + '">'
+}
 
-    we.apps.set('we-viewer-text', (we, file) => we.client.request('view', file.path)
-        .then((response: ServerResponse) => 
-            modal.open('View: ' + file.name, '<pre>' + response.xhr.responseText + '</pre>')
-        )
-    );
+function renderDefaultHTML(): string {
+    return '<p>No file viewer is integrated!</p>';
+}
 
+
+export default function viewer(we: WebExplorer) {
+    for(let key in apps) { 
+        we.apps.set(prefix + key, (we, file) => 
+            modal.open(file.name, apps[key](we, file))
+        );
+    }
+
+    we.apps.set(prefix + 'text', renderText);
 };

@@ -31,4 +31,8 @@ export default class FileClipboard {
 
         this.add(file);
     }
+
+    isEmpty() {
+        return this.clipboard.length <= 0;
+    }
 }

@@ -1,4 +1,3 @@
-import File from "../../file";
 import WebExplorer from "../../we";
 
 function createTrInput(we: WebExplorer, after: HTMLElement, complete: (e: HTMLInputElement) => void): void {
@@ -15,6 +14,7 @@ function createTrInput(we: WebExplorer, after: HTMLElement, complete: (e: HTMLIn
     input.addEventListener('blur', function () {
         complete(this);
     });
+    
     input.addEventListener('keypress', function(e) {
         if(e.which === 13 /* Enter */) {
             this.blur();
